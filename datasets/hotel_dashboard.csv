@@ -1,0 +1,8 @@
+date,hotel_type,bookings,adr,room_revenue,checkedin_guests,customer_type,market_segment
+2025-01-01,City,120,95,11400,180,Transient,Online TA
+2025-01-02,City,130,100,13000,190,Transient,Online TA
+2025-01-03,Resort,140,110,15400,210,Group,Offline TA
+2025-01-04,Resort,150,120,18000,220,Contract,Corporate
+2025-01-05,City,160,105,16800,230,Transient,Direct
+2025-01-06,City,170,102,17340,240,Transient,Online TA
+2025-01-07,Resort,180,115,20700,260,Group,Offline TA
