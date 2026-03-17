@@ -2,8 +2,14 @@ import streamlit as st
 import pandas as pd
 import sqlite3
 
+st.set_page_config(layout="wide")
+
+# =============================
+# DATABASE CONNECTION
+# =============================
 def get_connection():
     return sqlite3.connect("hotel_ai.db")
+
 def init_db():
     conn = get_connection()
     cursor = conn.cursor()
@@ -37,7 +43,7 @@ def init_db():
     )
     """)
 
-    # USER DEMO
+    # UTENTE DEMO
     cursor.execute("SELECT * FROM users")
     if not cursor.fetchall():
         cursor.execute("""
@@ -48,47 +54,40 @@ def init_db():
     conn.commit()
     conn.close()
 
-# inizializza database
+# inizializza DB
 init_db()
-
-st.set_page_config(layout="wide")
-
-# =============================
-# SIDEBAR
-# =============================
-st.sidebar.markdown("## 🧠 AI Revenue Platform")
-st.sidebar.markdown("---")
 
 # =============================
 # LOGIN
 # =============================
+st.sidebar.title("🏨 AI Revenue Platform")
 st.title("🔐 Login")
 
 username = st.text_input("Username")
 password = st.text_input("Password", type="password")
 
 if st.button("Login"):
-    conn = get_connection()
+    try:
+        conn = get_connection()
+        query = f"""
+        SELECT * FROM users
+        WHERE username = '{username}' AND password = '{password}'
+        """
+        user = pd.read_sql(query, conn)
+        conn.close()
 
-    query = f"""
-    SELECT * FROM users
-    WHERE username = '{username}'
-    AND password = '{password}'
-    """
-
-    user = pd.read_sql(query, conn)
-    conn.close()
-
-    if not user.empty:
-        st.session_state["logged_in"] = True
-        st.session_state["hotel"] = user.iloc[0]["hotel"]
-        st.success(f"Benvenuto {username}")
-    else:
-        st.error("Credenziali errate")
+        if not user.empty:
+            st.session_state["logged_in"] = True
+            st.session_state["hotel"] = user.iloc[0]["hotel"]
+            st.success(f"Benvenuto {username}")
+        else:
+            st.error("Credenziali errate")
+    except Exception as e:
+        st.error(f"Errore database: {e}")
 
 # =============================
 # APP ACCESSO
 # =============================
 if st.session_state.get("logged_in"):
-    st.sidebar.success(f"🏨 {st.session_state['hotel']}")
-    st.write("Usa il menu a sinistra")
+    st.sidebar.success(f"🏨 Hotel: {st.session_state['hotel']}")
+    st.write("Usa il menu a sinistra per navigare tra le sezioni")
