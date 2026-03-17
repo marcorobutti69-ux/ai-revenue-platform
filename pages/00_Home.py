@@ -20,6 +20,14 @@ def load_data():
 
 df = load_data()
 
+if df.empty:
+    st.warning("Modalità demo attiva")
+
+    df = pd.DataFrame({
+        "date": pd.date_range(start="2026-01-01", periods=10),
+        "rooms_sold": [40, 55, 60, 70, 65, 80, 75, 60, 50, 45]
+    })
+
 st.title("AI Hotel Revenue Platform")
 st.caption("Dashboard Overview")
 
