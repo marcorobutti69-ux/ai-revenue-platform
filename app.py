@@ -1,6 +1,9 @@
 import streamlit as st
 import pandas as pd
-from database import get_connection
+import sqlite3
+
+def get_connection():
+    return sqlite3.connect("hotel_ai.db")
 
 st.set_page_config(layout="wide")
 
